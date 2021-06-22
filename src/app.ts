@@ -25,6 +25,12 @@ const { HOST, PORT } = config.server;
 
 const routes: Array<CommonRoutesConfig> = [];
 
+routes.push(new UsersRoutes(app));
+
+routes.forEach((route: CommonRoutesConfig) => {
+  console.log(route)
+});
+
 const debugLog: debug.IDebugger = debug('app');
 
 const loggerOptions: expressWinston.LoggerOptions = {
@@ -44,8 +50,6 @@ if (!process.env.DEBUG) {
 
 app.use(expressWinston.logger(loggerOptions));
 
-routes.push(new UsersRoutes(app));
-
 const message: string = `The application is up and running on http://${HOST}:${PORT}`;
 
 app.get('/health-check', (req: express.Request, res: express.Response) => {
@@ -59,10 +63,11 @@ app.get('/health-check', (req: express.Request, res: express.Response) => {
 const startServer = (): void => {
   server.listen(PORT, () => {
     routes.forEach((route: CommonRoutesConfig) => {
+      console.info(`Routes configured for ${route.getName()}`);
       debugLog(`Routes configured for ${route.getName()}`);
     });
+    console.info(message);
   });
-  console.info(message);
 };
 
 startServer();
