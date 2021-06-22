@@ -50,7 +50,7 @@ class UsersMiddleware {
       res.status(404).send({
         success: false,
         statusCode: 404,
-        statusMessages: [`User ${req.params.userId} already exists`],
+        statusMessages: [`User ${req.params.userId} not found`],
       });
     }
   }
