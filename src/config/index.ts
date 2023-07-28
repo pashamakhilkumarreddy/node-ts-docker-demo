@@ -1,12 +1,12 @@
-import development from './development';
-import stage from './stage';
-import production from './production';
-import { ENV } from './common';
+import development from './development.js'
+import stage from './stage.js'
+import production from './production.js'
+import { ENV } from './common.js'
 
 const config: any = {
   development,
   stage,
-  production,
-};
+  production
+}
 
-export default config[ENV];
+export default config[ENV]

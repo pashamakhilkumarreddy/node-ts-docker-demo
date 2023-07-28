@@ -1,73 +1,74 @@
-import argon2 from 'argon2';
-import debug from 'debug';
-import express from 'express';
+import argon2 from 'argon2'
+import debug from 'debug'
+import type express from 'express'
 
-import usersService from '../services/users.service';
+import usersService from '../services/users.service.js'
 
-const log: debug.IDebugger = debug('app:users-controller');
+const log: debug.IDebugger = debug('app:users-controller')
 
 class UsersController {
-  async listUsers(req: express.Request, res: express.Response) {
-    const users = usersService.list(100, 0);
+  async listUsers (req: express.Request, res: express.Response): Promise<any> {
+    const users = usersService.list(100, 0)
     res.status(200).send({
       success: true,
       statusMessages: ['Successfully fetched the users'],
       data: {
-        users,
-      },
-    });
+        users
+      }
+    })
   }
 
-  async getUserById(req: express.Request, res: express.Response) {
-    const user = await usersService.readById(req.body.id);
+  async getUserById (req: express.Request, res: express.Response): Promise<any> {
+    const user = await usersService.readById(req.body.id)
     res.status(200).send({
       success: true,
       statusMessages: ['Successfully fetched the user'],
       data: {
-        user,
-      },
-    });
+        user
+      }
+    })
   }
 
-  async createUser(req: express.Request, res: express.Response) {
-    req.body.password = await argon2.hash(req.body.password);
-    const userId = await usersService.create(req.body);
+  async createUser (req: express.Request, res: express.Response): Promise<any> {
+    req.body.password = await argon2.hash(req.body.password)
+    const userId = await usersService.create(req.body)
     res.status(200).send({
       success: true,
       statusMessages: ['Successfully added the new user'],
       data: {
-        id: userId,
-      },
-    });
+        id: userId
+      }
+    })
   }
 
-  async patch(req: express.Request, res: express.Response) {
-    if (req.body.password) {
-      req.body.password = await argon2.hash(req.body.password);
+  async patch (req: express.Request, res: express.Response): Promise<any> {
+    const { password = '' } = req.body
+    if (password !== '') {
+      req.body.password = await argon2.hash(req.body.password)
     }
-    log(await usersService.patchById(req.body.id, req.body));
+    log(await usersService.patchById(req.body.id, req.body))
     res.status(204).send({
       success: true,
-      statusMessages: ['Successfully updated the user'],
-    });
+      statusMessages: ['Successfully updated the user']
+    })
   }
 
-  async put(req: express.Request, res: express.Response) {
-    req.body.password = await argon2.hash(req.body.password);
-    log(await usersService.putById(req.body.id, req.body));
+  async put (req: express.Request, res: express.Response): Promise<any> {
+    req.body.password = await argon2.hash(req.body.password)
+    log(await usersService.putById(req.body.id, req.body))
     res.status(204).send({
       success: true,
-      statusMessages: ['Successfully updated the user'],
-    });
+      statusMessages: ['Successfully updated the user']
+    })
   }
 
-  async removeUser(req: express.Request, res: express.Response) {
-    log(await usersService.deleteById(req.body.id));
+  async removeUser (req: express.Request, res: express.Response): Promise<any> {
+    log(await usersService.deleteById(req.body.id))
     res.status(204).send({
       success: true,
-      statusMessages: ['Successfully updated the user'],
-    });
+      statusMessages: ['Successfully updated the user']
+    })
   }
 }
 
-export default new UsersController();
+export default new UsersController()

@@ -1,79 +1,78 @@
-import shortid from 'shortid';
-import debug from 'debug';
-import { CreateUserDto } from '../dto/create.user.dto';
-import { PatchUserDto } from '../dto/patch.user.dto';
-import { PutUserDto } from '../dto/put.user.dto';
+import { nanoid } from 'nanoid'
+import debug from 'debug'
+import { type CreateUserDto } from '../dto/create.user.dto.js'
+import { type PatchUserDto } from '../dto/patch.user.dto.js'
+import { type PutUserDto } from '../dto/put.user.dto.js'
 
-const log: debug.IDebugger = debug('app:in-memory-dao');
+const log: debug.IDebugger = debug('app:in-memory-dao')
 
 class UsersDao {
-  users: Array<CreateUserDto> = [];
+  users: CreateUserDto[] = []
 
-  constructor() {
-    log('Created an instance of UsersDao');
+  constructor () {
+    log('Created an instance of UsersDao')
   }
 
-  async addUser(user: CreateUserDto) {
-    user.id = shortid.generate();
-    this.users.push(user);
-    return user.id;
+  async addUser (user: CreateUserDto): Promise<string> {
+    user.id = nanoid()
+    this.users.push(user)
+    return user.id
   }
 
-  async getUsers() {
-    return this.users;
+  async getUsers (): Promise<CreateUserDto[]> {
+    return this.users
   }
 
-  async getUserById(userId: string) {
-    return this.users.find((user: { id: string }) => user.id === userId);
+  async getUserById (userId: string): Promise<CreateUserDto | undefined> {
+    return this.users.find((user: { id: string }) => user.id === userId)
   }
 
-  async putUserById(userId: string, user: PutUserDto) {
+  async putUserById (userId: string, user: PutUserDto): Promise<string> {
     const objIndex = this.users.findIndex(
-      (obj: { id: string }) => obj.id === userId,
-    );
-    this.users.splice(objIndex, 1, user);
-    return `${user.id} updated via put`;
+      (obj: { id: string }) => obj.id === userId
+    )
+    this.users.splice(objIndex, 1, user)
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    return `${user.id} updated via put`
   }
 
-  async patchUserById(userId: string, user: PatchUserDto) {
+  async patchUserById (userId: string, user: PatchUserDto): Promise<string> {
     const objIndex = this.users.findIndex(
-      (obj: { id: string }) => obj.id === userId,
-    );
-    const currentUser = this.users[objIndex];
+      (obj: { id: string }) => obj.id === userId
+    )
+    const currentUser = this.users[objIndex]
     const allowedPatchFields = [
       'password',
       'firstName',
       'lastName',
-      'permissionLevel',
-    ];
+      'permissionLevel'
+    ]
     for (const field of allowedPatchFields) {
       if (field in user) {
-        // @ts-ignore
-        currentUser[field] = user[field];
+        // @ts-expect-error if field is missing
+        currentUser[field] = user[field]
       }
     }
-    this.users.splice(objIndex, 1, currentUser);
-    return `${user.id} patched`;
+    this.users.splice(objIndex, 1, currentUser)
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    return `${user.id} patched`
   }
 
-  async removeUserById(userId: string) {
+  async removeUserById (userId: string): Promise<string> {
     const objIndex = this.users.findIndex(
-      (obj: { id: string }) => obj.id === userId,
-    );
-    this.users.splice(objIndex, 1);
-    return `${userId} removed`;
+      (obj: { id: string }) => obj.id === userId
+    )
+    this.users.splice(objIndex, 1)
+    return `${userId} removed`
   }
 
-  async getUserByEmail(email: string) {
+  async getUserByEmail (email: string): Promise<CreateUserDto | null> {
     const objIndex = this.users.findIndex(
-      (obj: { email: string }) => obj.email === email,
-    );
-    const currentUser = this.users[objIndex];
-    if (currentUser) {
-      return currentUser;
-    }
-    return null;
+      (obj: { email: string }) => obj.email === email
+    )
+    const currentUser = this.users[objIndex]
+    return currentUser
   }
 }
 
-export default new UsersDao();
+export default new UsersDao()

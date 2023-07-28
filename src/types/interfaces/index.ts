@@ -1,3 +1,3 @@
-import { Config } from './config';
+import { type Config, type Response } from './config.js'
 
-export { Config };
+export type { Config, Response }

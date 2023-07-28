@@ -1,8 +1,8 @@
-import { Config } from '../types/interfaces';
-import commonConfig from './common';
+import { type Config } from '../types/interfaces/index.js'
+import commonConfig from './common.js'
 
 const config: Config = {
-  ...commonConfig,
-};
+  ...commonConfig
+}
 
-export default config;
+export default config

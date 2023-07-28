@@ -1,10 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2019",
-    "module": "commonjs",
+    "target": "es2022",
+    "module": "nodenext",
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
     "inlineSourceMap": true
-  }
+  },
+  "include": [
+    "./src/",
+    "./.eslintrc.cjs"
+  ]
 }
