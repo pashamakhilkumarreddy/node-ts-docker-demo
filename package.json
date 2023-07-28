@@ -1,19 +1,20 @@
 {
   "name": "node-ts-docker-demo",
   "version": "1.0.0",
-  "description": "Sample ",
+  "description": "Sample Application using Node, Typescript and Docker",
   "main": "app.js",
   "type": "module",
   "scripts": {
     "clobber": "rm -rf node_modules/ && rm -rf dist/",
     "build": "tsc",
-    "dev": "npm run build && node --unhandled-rejections=strict ./dist/app.js",
+    "build-prod": "tsc --removeComments",
+    "dev": "npm run build && node --unhandled-rejections=strict ./dist/src/app.js",
     "start": "nodemon --watch src/ --ext .ts,.json --exec \"npm run dev && node\"",
     "lint": "eslint src/* --ext .ts",
     "lint:fix": "eslint src/* --ext .ts --fix",
     "debug": "export DEBUG=* && npm run start",
-    "prod": "NODE_ENV=production npm run build && node ./dist/app.js",
-    "prod-pm2": "NODE_ENV=production npm run build && pm2 start ./dist/app.js",
+    "prod": "NODE_ENV=production node ./dist/app.js",
+    "prod-pm2": "NODE_ENV=production pm2 start ./dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
